@@ -3,3 +3,9 @@ channels:
   - defaults
 dependencies:
   - opencv3
+  - ffmpeg
+  - pandas
+  - scipy
+  - matplotlib
+  - sklearn
+
