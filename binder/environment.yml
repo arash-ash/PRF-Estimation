@@ -1,5 +1,15 @@
 channels:
+  - menpo
+  - anaconda
   - conda-forge
   - defaults
 dependencies:
+  - jupyterlab_launcher
+  - ipython
   - opencv3
+  - ffmpeg
+  - pandas
+  - scipy
+  - matplotlib
+  - scikit-learn
+
