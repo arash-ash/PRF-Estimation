@@ -2,6 +2,7 @@ channels:
   - menpo
   - defaults
 dependencies:
+  - jupyterlab_launcher
   - opencv3
   - ffmpeg
   - pandas
