@@ -12,4 +12,5 @@ dependencies:
   - scipy
   - matplotlib
   - scikit-learn
+  - skimage
 
