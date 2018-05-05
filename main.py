@@ -132,14 +132,17 @@ def generateData(neuronal_responses, hrf):
     
 def estimatePRF(bolds, stim, hrf, xVoxel, yVoxel):
     def MSE(x):
+        bold = bolds[:, xVoxel, yVoxel]
+        
         mean = np.array([x[0], x[1]])
         cov = np.array([[x[2], 0], [0, x[2]]])
         rf = multivariate_normal(mean=mean, cov=cov)
         model = rf.pdf(pos)
-        rf_response = np.sum(np.sum(stim*model, axis=1),axis=1)
-        rf_response = rf_response / max(np.max(rf_response),1)
+        response = stim*model
+        rf_response = np.sum(np.sum(response, axis=1),axis=1)
+        rf_response = rf_response / np.max(rf_response) * np.max(bold)
         prediction = np.convolve(rf_response, hrf)[:len(t)]
-        return np.sum((bolds[:, xVoxel, yVoxel] - prediction)**2)
+        return np.sum((bold - prediction)**2)
 
     x0 = [0.1, 0.1, 1]
     bnds = ((-radius, radius), (-radius, radius), (1e-10, 5))
@@ -164,17 +167,17 @@ def hrf_double_gamma(t,n1,n2,lmbd1,lmbd2,t01,t02,a):
 
 #print('generating stimulus...')
 #stim, stim_short = generateStim()
-
-print('Retinotopic mapping of stimulus...')
-stim_mapped = retinotopicMap(stim_short, base=1.28)
-
+#
+#print('Retinotopic mapping of stimulus...')
+#stim_mapped = retinotopicMap(stim_short, base=1.28)
+#
 #print('assuming HRF model...')
 #hrf = hrf_double_gamma(t, n1, n2, lmbd1, lmbd2, t01, t02, a)
-
-print('simulating BOLD response...')
-bolds = generateData(stim_mapped, hrf)
+#
+#print('simulating BOLD response...')
+#bolds = generateData(stim_mapped, hrf)
 
 print('estimating PRF...\n')
-res = estimatePRF(bolds, stim, hrf, xVoxel=10, yVoxel=10)
+res = estimatePRF(bolds, stim, hrf, xVoxel=15, yVoxel=15)
 
 print('x=%.3f, y=%.3f, simga=%.3f'%(res['x'][0],res['x'][1],res['x'][2]))
